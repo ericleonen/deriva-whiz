@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import ExpressionGenerator from "@/math/generateExpression";
 import Expression from "@/math/Expression";
 
-const NUM_PROBLEMS = 10;
+const NUM_PROBLEMS = 20;
 
 const expressionGenerator = new ExpressionGenerator(NUM_PROBLEMS);
 const problems: Expression[] = [];

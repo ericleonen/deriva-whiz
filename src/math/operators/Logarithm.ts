@@ -20,14 +20,16 @@ export default class Logarithm extends Function {
 
     differentiate(): Function {
         if (!this.checkHasX()) return new Integer(0);
-        else if (
-            this.base instanceof Transcendental && this.base.symbol === "e" || 
-            !this.base.checkHasX()
-        ) {
+        else if (this.base instanceof Transcendental && this.base.symbol === "e") {
             return new Division(
                 this.power.differentiate(),
                 this.power.clone()
             );
+        } else if (!this.base.checkHasX()) {
+            return new Division(
+                this.power.differentiate(),
+                new Multiplication(new Logarithm(this.base.clone()), this.power.clone())
+            )
         } else if (!this.power.checkHasX()) {
             return new Negation(
                 new Division(
