@@ -43,8 +43,6 @@ export default class ExpressionGenerator {
 
         this.expressionsLeft--;
 
-        console.log(this.weights);
-
         return new Expression(expression);
     }
 
