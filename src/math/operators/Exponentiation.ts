@@ -1,6 +1,5 @@
 import Function from "../Function";
-import { addNecessaryParentheses } from "../generateExpression";
-import Constant from "../operands/Constant";
+import { addNecessaryParentheses } from "../utils";
 import Integer from "../operands/Integer";
 import Transcendental from "../operands/Transcendental";
 import Addition from "./Addition";
@@ -76,7 +75,7 @@ export default class Exponentiation extends Function {
     }
 
     evaluate(x: number): number | undefined {
-        const base = this.base ? this.base.evaluate(x) : Math.E;
+        const base = this.base.evaluate(x);
         const exponent = this.exponent.evaluate(x);
 
         if (base !== undefined && exponent !== undefined) {

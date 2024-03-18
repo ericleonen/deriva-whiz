@@ -1,4 +1,4 @@
-import Function from "../Function"
+import Function from "../Function";
 import Integer from "./Integer";
 
 export default abstract class Constant extends Function {

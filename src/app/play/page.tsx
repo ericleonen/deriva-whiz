@@ -3,28 +3,39 @@
 import { EditableMathField, StaticMathField } from "react-mathquill";
 import TopBar from "./components/TopBar";
 import { useEffect, useState } from "react";
-import { addNecessaryParentheses, generateExpression } from "@/math/generateExpression";
+import ExpressionGenerator from "@/math/generateExpression";
 import Expression from "@/math/Expression";
 
+const NUM_PROBLEMS = 10;
+
+const expressionGenerator = new ExpressionGenerator(NUM_PROBLEMS);
+const problems: Expression[] = [];
+while (expressionGenerator.hasNext()) {
+    problems.push(expressionGenerator.next());
+}
+
 export default function Play() {
-    const [problem, setProblem] = useState(generateExpression());
+    const [problem, setProblem] = useState(0);
     const [latex, setLatex] = useState("");
 
     useEffect(() => {
-        const expression = new Expression(latex);
+        if (latex.length === 0) return;
 
-        if (expression && expression.equals(problem.differentiate())) {
-            setProblem(generateExpression());
+        const expression = new Expression(latex);
+        const derivative = problems[problem].differentiate();
+
+        if (derivative && expression.equals(derivative)) {
+            setProblem(prevProblem => (prevProblem < NUM_PROBLEMS - 1) ? prevProblem + 1 : prevProblem);
             setLatex("");
         }
-    }, [latex]);
+    }, [latex, setProblem]);
 
     return (
         <>
             <TopBar />
             <div className="w-full flex-grow flex flex-col items-center">
                 <div className="h-1/4"/>
-                <StaticMathField>{`\\frac{d}{dx}${(addNecessaryParentheses(problem)).latex()}=`}</StaticMathField>
+                <StaticMathField>{`\\frac{d}{dx}\\left(${problems[problem].latex()}\\right)=`}</StaticMathField>
                 <div className="h-4"/>
                 <EditableMathField 
                     latex={latex}

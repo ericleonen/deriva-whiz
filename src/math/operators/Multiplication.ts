@@ -3,7 +3,7 @@ import Integer from "../operands/Integer";
 import Real from "../operands/Real";
 import Addition from "./Addition";
 import Constant from "../operands/Constant";
-import { addNecessaryParentheses } from "../generateExpression";
+import { addNecessaryParentheses } from "../utils";
 
 export default class Multiplication extends Function {
     private left: Function;

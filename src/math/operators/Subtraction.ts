@@ -1,5 +1,5 @@
 import Function from "../Function";
-import { addNecessaryParentheses } from "../generateExpression";
+import { addNecessaryParentheses } from "../utils";
 import Integer from "../operands/Integer";
 import Negation from "./Negation";
 

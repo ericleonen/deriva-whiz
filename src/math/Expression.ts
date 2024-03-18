@@ -39,11 +39,8 @@ export default class Expression {
     constructor(expression?: Function | string) {
         try {
             this.root = 
-                expression instanceof Function ? expression :
                 typeof expression === "string" ? this.buildTree(expression.replaceAll(" ", "")) :
                 expression;
-
-            console.log(this.root);
         } catch (err) {
             console.log(err);
         }

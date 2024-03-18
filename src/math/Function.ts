@@ -32,12 +32,15 @@ export default abstract class Function {
             throw new Error("threshold cannot be less than or equal to 0");
         }
 
+        let totalError = 0;
+
         for (let sample = 1; sample <= samples; sample++) {
             const x = getRandom(min, max);
             const truth = this.evaluate(x);
             const guess = other.evaluate(x);
 
-            if (truth === undefined || (guess !== undefined && Math.abs(truth - guess) < threshold)) continue;
+            if (guess !== undefined && truth !== undefined) totalError += Math.abs(truth - guess);
+            if (truth === undefined || totalError < threshold) continue;
 
             return false;
         }
