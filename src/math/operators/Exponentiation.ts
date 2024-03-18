@@ -51,12 +51,12 @@ export default class Exponentiation extends Function {
             this.clone(),
             new Addition(
                 new Multiplication(
-                    new Logarithm(this.base!.clone()),
+                    new Logarithm(this.base.clone()),
                     this.exponent.differentiate()
                 ),
                 new Division(
-                    new Multiplication(this.exponent.clone(), this.base!.differentiate()),
-                    this.base!.clone()
+                    new Multiplication(this.exponent.clone(), this.base.differentiate()),
+                    this.base.clone()
                 )
             )
         );

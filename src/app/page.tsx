@@ -7,7 +7,7 @@ export default function Home() {
         <h1 className="text-4xl font-bold">Deriva-Whiz</h1>
         <Link 
           href="/play"
-          className="mt-3 text-2xl font-medium bg-green-400/30 text-green-500 py-2 px-8 rounded-md"
+          className="mt-3 text-2xl font-medium bg-green-400/20 hover:bg-green-400/40 text-green-500 py-2 px-8 rounded-md"
         >
           Play
         </Link>

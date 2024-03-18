@@ -86,3 +86,16 @@ export function addNecessaryParentheses(expression: Function, functions: boolean
 
     return expression;
 }
+
+export const formatTime = (cs: number) => {
+    const s = cs / 100;
+
+    switch (getDecimalPlaces(s)) {
+        case 0:
+            return s + ".00";
+        case 1:
+            return s + "0";
+        default:
+            return s;
+    }
+}
