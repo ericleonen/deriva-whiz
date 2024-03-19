@@ -1,11 +1,4 @@
-"use client"
-
 import { LayoutProps } from "@/types";
-import { addStyles } from "react-mathquill";
-
-if (window !== undefined) {
-    addStyles();
-}
 
 export default function PlayLayout({ children }: LayoutProps) {
     return (

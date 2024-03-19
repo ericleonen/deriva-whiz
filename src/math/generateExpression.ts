@@ -1,3 +1,4 @@
+import { MAX_PROBLEM_DIFFICULTY, MIN_PROBLEM_DIFFICULTY, TERMINATE_CONSTANT, difficulties } from "@/config";
 import Expression from "./Expression";
 import Function from "./Function";
 import Integer from "./operands/Integer";
@@ -32,153 +33,130 @@ export default class ExpressionGenerator {
         return this.expressionsLeft > 0;
     }
 
-    next(): Expression {
+    next(): [Expression, number] {
         if (!this.hasNext()) throw new Error("cannot call next on an empty generator");
 
-        const difficultyGoal = this.difficultyLeft / this.expressionsLeft;
-        const [difficultyDelta, expression] = this.buildExpression(difficultyGoal);
+        const difficultyGoal = Math.max(
+            Math.min(this.difficultyLeft / this.expressionsLeft, MAX_PROBLEM_DIFFICULTY),
+            MIN_PROBLEM_DIFFICULTY
+        );
+        const [difficultyDelta, expression] = this.buildExpression(difficultyGoal, new Variable(), false);
 
         const expressionDifficulty = difficultyGoal - difficultyDelta;
         this.difficultyLeft -= expressionDifficulty;
 
         this.expressionsLeft--;
 
-        return new Expression(expression);
+        return [new Expression(expression), expressionDifficulty];
     }
 
     private terminateProb(difficulty: number) {
-        return 1 / (1 + Math.exp(5 * difficulty));
+        return 1 / (1 + Math.exp(TERMINATE_CONSTANT * (difficulty - MIN_PROBLEM_DIFFICULTY / 2)));
     }
 
-    private buildExpression(difficulty: number, expression: Function = new Variable()): [number, Function] {
-        if (Math.random() < this.terminateProb(difficulty)) {
+    private buildExpression(difficulty: number, expression: Function = new Variable(), canTerminate: boolean = true): [number, Function] {
+        if (canTerminate && Math.random() < this.terminateProb(difficulty)) {
             return [difficulty, expression];
         }
 
         const choice = this.choose();
         let otherExpression: Function;
-        let addedDifficulty = 0; // 0 being no added difficulty, 100 being impossible
 
         switch(choice) {
             case 0: // x + c
-                addedDifficulty = 10;
                 expression = new Addition(expression, new Integer(randInt(1, 9)));
                 break;
             case 1: // c + x
-                addedDifficulty = 10;
                 expression = new Addition(new Integer(randInt(1, 9)), expression);
                 break;
             case 2: // x - c
-                addedDifficulty = 15;
                 expression = new Subtraction(expression, new Integer(randInt(1, 9)));
                 break;
             case 3: // c - x
-                addedDifficulty = 15;
                 expression = new Subtraction(new Integer(randInt(1, 9)), expression);
                 break;
             case 4: // x + x
-                addedDifficulty = 15;
                 [difficulty, otherExpression] = this.buildExpression(difficulty);
                 expression = new Addition(expression, otherExpression);
                 break;
             case 5: // x - x
-                addedDifficulty = 20;
                 [difficulty, otherExpression] = this.buildExpression(difficulty);
                 expression = new Subtraction(expression, otherExpression);
                 break;
             case 6: // c * x
-                addedDifficulty = 20;
                 expression = new Multiplication(new Integer(randInt(2, 9)), expression);
                 break;
             case 7: // x / c
-                addedDifficulty = 20;
                 expression = new Division(expression, new Integer(randInt(2, 9)));
                 break;
             case 8: // -x
-                addedDifficulty = 20;
                 expression = new Negation(expression);
                 break;
             case 9: // x * x
-                addedDifficulty = 40;
                 [difficulty, otherExpression] = this.buildExpression(difficulty);
                 expression = new Multiplication(expression, otherExpression);
                 break;
             case 10: // c / x
-                addedDifficulty = 40;
                 expression = new Division(new Integer(randInt(2, 9)), expression);
                 break;
             case 11: // x^c
-                addedDifficulty = 45
                 expression = new Exponentiation(new Integer(randInt(2, 9)), expression);
                 break;
             case 12: // e^x
-                addedDifficulty = 35;
                 expression = new Exponentiation(expression);
                 break;
             case 13: // sqrt(x)
-                addedDifficulty = 50;
                 expression = new SquareRoot(expression);
                 break;
             case 14: // ln(x)
-                addedDifficulty = 50;
                 expression = new Logarithm(expression);
                 break;
             case 15: // sin(x)
-                addedDifficulty = 50;
                 expression = new Sine(expression);
                 break;
             case 16: // cos(x)
-                addedDifficulty = 50;
                 expression = new Cosine(expression);
                 break;
             case 17: // tan(x)
-                addedDifficulty = 60;
                 expression = new Tangent(expression);
                 break;
             case 18: // x / x
-                addedDifficulty = 87;
                 [difficulty, otherExpression] = this.buildExpression(difficulty);
                 expression = new Division(expression, otherExpression);
                 break;
             case 19: // c^x
-                addedDifficulty = 80;
                 expression = new Exponentiation(expression, new Integer(randInt(2, 9)));
                 break;
             case 20: // log_c(x)
-                addedDifficulty = 70;
                 expression = new Logarithm(expression, new Integer(randInt(2, 10)));
                 break;
             case 21: // csc(x)
-                addedDifficulty = 65;
                 expression = new Cosecant(expression);
                 break;
             case 22: // sec(x)
-                addedDifficulty = 60;
                 expression = new Secant(expression);
                 break;
             case 23: // cot(x)
-                addedDifficulty = 65;
                 expression = new Cotangent(expression);
                 break;
             case 24: // x^x
-                addedDifficulty = 95;
                 [difficulty, otherExpression] = this.buildExpression(difficulty);
                 expression = new Exponentiation(expression, otherExpression);
                 break;
             case 25: // log_x(c)
-                addedDifficulty = 90;
                 expression = new Logarithm(new Integer(randInt(2, 9)), expression);
                 break;
             case 26: // log_x(x)
-                addedDifficulty = 95;
                 [difficulty, otherExpression] = this.buildExpression(difficulty);
                 expression = new Logarithm(expression, otherExpression);
                 break;
+            default:
+                throw new Error();
         }
 
-        this.weights[choice] *= (100 - addedDifficulty) / 100;
 
-        return this.buildExpression(difficulty - addedDifficulty / 100, expression);
+        this.weights[choice] *= (100 - difficulties[choice]) / 100;
+        return this.buildExpression(difficulty - difficulties[choice] / 100, expression);
     }
 
     private choose() {

@@ -10,8 +10,11 @@ import { NUM_PROBLEMS } from "@/config";
 const makeProblems = () => {
     const expressionGenerator = new ExpressionGenerator(NUM_PROBLEMS);
     const problems: Expression[] = [];
+    const difficulties: number[] = [];
     while (expressionGenerator.hasNext()) {
-        problems.push(expressionGenerator.next());
+        const [expression, difficulty] = expressionGenerator.next();
+        problems.push(expression);
+        difficulties.push(difficulty);
     }
 
     return problems;
