@@ -33,13 +33,11 @@ export default function Game() {
         const expression = new Expression(latex);
         const derivative = problems[problem].differentiate();
 
-        console.log(expression);
-
         if (derivative && expression.equals(derivative)) {
             setProblem(prevProblem => prevProblem + 1);
             setLatex("");
         }
-    }, [latex, setProblem]);
+    }, [latex, setProblem, problem]);
 
     useEffect(() => {
         const timer = setInterval(() => {
