@@ -13,13 +13,13 @@ export default function HowTo() {
                 Solve the {NUM_PROBLEMS} derivatives as fast as you can.
                 <br />
                 <br />
-                If you can't solve derivative, skip it by hitting <span className="text-xs text-red-500 font-medium py-1 px-2 bg-red-500/20 rounded-md">Skip question</span> in the upper right
+                If you cannot solve derivative, skip it by hitting <span className="text-xs text-red-500 font-medium py-1 px-2 bg-red-500/20 rounded-md">Skip question</span> in the upper right
             </p>
             <button 
                 onClick={() => setGameActive(true)}
                 className="mt-10 font-medium bg-green-400/20 hover:bg-green-400/40 text-green-500 py-2 px-8 rounded-md"
             >
-                Let's go!
+                Begin!
             </button>
         </Modal>
     )
