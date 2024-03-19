@@ -1,7 +1,7 @@
 import { NUM_PROBLEMS } from "@/config";
 import Modal from "./Modal";
 import { useSetAtom } from "jotai";
-import { gameActiveAtom } from "../../page";
+import { gameActiveAtom } from "../../atoms";
 
 export default function HowTo() {
     const setGameActive = useSetAtom(gameActiveAtom);

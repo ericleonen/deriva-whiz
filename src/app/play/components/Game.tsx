@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Expression from "@/math/Expression";
 import ExpressionGenerator from "@/math/generateExpression";
 import { useAtom, useSetAtom } from "jotai";
-import { gameActiveAtom, problemAtom, timeAtom } from "../page";
+import { gameActiveAtom, problemAtom, timeAtom } from "../atoms";
 import { NUM_PROBLEMS } from "@/config";
 
 const makeProblems = () => {
