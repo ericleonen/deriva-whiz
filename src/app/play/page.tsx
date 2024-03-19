@@ -2,18 +2,17 @@
 
 import { useAtomValue } from "jotai";
 import HowTo from "./components/modals/HowTo";
-import Game from "./components/Game";
 import { NUM_PROBLEMS } from "@/config";
 import GameOver from "./components/modals/GameOver";
-import { addStyles } from "react-mathquill";
 import { gameActiveAtom, problemAtom } from "./atoms";
-import { useEffect } from "react";
+import dynamic from "next/dynamic";
+
+const Game = dynamic(
+    () => import("./components/Game"),
+    {ssr: false}
+)
 
 export default function Play() {
-    useEffect(() => {
-        addStyles();
-    }, []);
-
     const problem = useAtomValue(problemAtom);
     const gameActive = useAtomValue(gameActiveAtom);
 

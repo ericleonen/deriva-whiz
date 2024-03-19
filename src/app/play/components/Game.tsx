@@ -6,6 +6,7 @@ import ExpressionGenerator from "@/math/generateExpression";
 import { useAtom, useSetAtom } from "jotai";
 import { gameActiveAtom, problemAtom, timeAtom } from "../atoms";
 import { NUM_PROBLEMS } from "@/config";
+import { addStyles } from "react-mathquill";
 
 const makeProblems = () => {
     const expressionGenerator = new ExpressionGenerator(NUM_PROBLEMS);
@@ -18,6 +19,10 @@ const makeProblems = () => {
     }
 
     return problems;
+}
+
+if (typeof window !== "undefined") {
+    addStyles();
 }
 
 export default function Game() {
@@ -37,7 +42,7 @@ export default function Game() {
             setProblem(prevProblem => prevProblem + 1);
             setLatex("");
         }
-    }, [latex, setProblem, problem]);
+    }, [latex, setProblem, problem, problems, setLatex]);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -45,11 +50,11 @@ export default function Game() {
         }, 10);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [setTime]);
 
     useEffect(() => {
         if (problem >= NUM_PROBLEMS) setGameActive(false);
-    }, [problem])
+    }, [problem, setGameActive])
 
     return (
         <>   
