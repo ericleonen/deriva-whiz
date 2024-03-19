@@ -39,10 +39,15 @@ export default abstract class Function {
             const truth = this.evaluate(x);
             const guess = other.evaluate(x);
 
-            if (guess !== undefined && truth !== undefined) totalError += Math.abs(truth - guess);
-            if (truth === undefined || totalError < threshold) continue;
-
-            return false;
+            if (guess !== undefined && truth !== undefined) totalError += Math.abs((truth - guess) / (truth ? truth : 1));
+            
+            if (totalError > threshold || (guess === undefined && truth !== undefined)) {
+                // console.log("x=", x);
+                // console.log("truth=", truth);
+                // console.log("guess=", guess);
+                // console.log("error=", (truth! - guess!) / truth!);
+                return false;
+            }
         }
 
         return true;

@@ -17,6 +17,7 @@ import Real from "./operands/Real";
 import Transcendental from "./operands/Transcendental";
 import Variable from "./operands/Variable";
 import SquareRoot from "./operators/SquareRoot";
+import Negation from "./operators/Negation";
 
 const NUM_SYMBOLS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
 const OPERATOR_SYMBOLS = ["+", "-", "^", "\\cdot"];
@@ -128,6 +129,37 @@ export default class Expression {
         const symbols = typeof expression === "string" ? this.splitSymbols(expression) : expression;
         const functions: Function[] = [];
 
+        const plusIndex = symbols.indexOf("+");
+        if (plusIndex === 0) {
+            symbols.shift();
+
+            return this.buildTree(symbols);
+        }
+        else if (plusIndex > 0) {
+            const leftTree = this.buildTree(symbols.slice(0, plusIndex));
+            const rightTree = this.buildTree(symbols.slice(plusIndex + 1));
+
+            if (!leftTree || !rightTree) throw new Error();
+
+            return new Addition(leftTree, rightTree);
+        }
+
+        const minusIndex = symbols.indexOf("-");
+        if (minusIndex === 0) {
+            const innerTree = this.buildTree(symbols.slice(1));
+
+            if (!innerTree) throw new Error();
+
+            return new Negation(innerTree);
+        } else if (minusIndex > 0) {
+            const leftTree = this.buildTree(symbols.slice(0, minusIndex));
+            const rightTree = this.buildTree(symbols.slice(minusIndex + 1));
+
+            if (!leftTree || !rightTree) throw new Error();
+
+            return new Subtraction(leftTree, rightTree);
+        }
+
         while (symbols.length > 0) {
             const symbol = this.nextTerm(symbols);
             let functionTree: Function;
@@ -135,16 +167,6 @@ export default class Expression {
             if (!isNaN(+symbol)) {
                 if (symbol.includes(".")) functionTree = new Real(+symbol);
                 else functionTree = new Integer(+symbol);
-            } else if ("+-".includes(symbol)) {
-                const leftTree = functions.length === 0 ? new Integer(0) : this.joinTerm(functions);
-                const rightTree = this.buildTree(symbols);
-
-                if (!rightTree) throw new Error();
-                else if (symbol === "+") {
-                    return new Addition(leftTree!, rightTree);
-                } else { // symbol === "-"
-                    return new Subtraction(leftTree!, rightTree);
-                }
             } else if (symbol === "^") {
                 if (functions.length === 0) throw new Error();
                 const exponent = this.buildTree(this.nextTerm(symbols, false));
