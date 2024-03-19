@@ -7,12 +7,13 @@ import { NUM_PROBLEMS } from "@/config";
 import GameOver from "./components/modals/GameOver";
 import { addStyles } from "react-mathquill";
 import { gameActiveAtom, problemAtom } from "./atoms";
-
-if (typeof window !== "undefined") {
-    addStyles();
-}
+import { useEffect } from "react";
 
 export default function Play() {
+    useEffect(() => {
+        addStyles();
+    }, []);
+
     const problem = useAtomValue(problemAtom);
     const gameActive = useAtomValue(gameActiveAtom);
 
