@@ -1,6 +1,6 @@
 import { useAtom, useSetAtom } from "jotai";
 import Modal from "./Modal";
-import { gameActiveAtom, problemAtom, timeAtom } from "../../page";
+import { gameActiveAtom, problemAtom, timeAtom } from "../../atoms";
 import { formatTime } from "@/math/utils";
 
 export default function GameOver() {

@@ -1,8 +1,8 @@
 import { Trigger } from "@/types"
 import { ReactNode } from "react"
-import { problemAtom, timeAtom } from "../page"
+import { problemAtom, timeAtom } from "../atoms"
 import { useAtom, useSetAtom } from "jotai";
-import { formatTime, getDecimalPlaces } from "@/math/utils";
+import { formatTime } from "@/math/utils";
 import { useRouter } from "next/navigation";
 
 export default function TopBar() {
